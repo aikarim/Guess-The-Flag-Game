@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<title>Guess The Flag</title>
+
+<style>
+/* ---------- THEME ---------- */
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #020617;
+  --btn: #e2e8f0;
+  --accent: #2563eb;
+}
+
+body.dark {
+  --bg: #020617;
+  --card: #0f172a;
+  --text: #ffffff;
+  --btn: #1e293b;
+  --accent: #38bdf8;
+}
+
+/* ---------- BASE ---------- */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.quiz {
+  background: var(--card);
+  padding: 22px;
+  border-radius: 16px;
+  width: 360px;
+  margin-top: 30px;
+  box-shadow: 0 18px 35px rgba(0,0,0,.35);
+}
+
+.center { text-align: center; }
+.hidden { display: none; }
+
+/* ---------- TOP BAR ---------- */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ---------- FLAG ---------- */
+img {
+  width: 180px;
+  margin: 16px auto;
+  display: block;
+  border-radius: 10px;
+  border: 3px solid #000; /* BLACK BORDER */
+}
+
+/* ---------- OPTIONS ---------- */
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  background: var(--btn);
+  color: var(--text); /* FIXED DARK MODE TEXT */
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+button:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+/* ---------- CONTROLS ---------- */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+/* ---------- START PAGE ---------- */
+.start-actions button {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.dev {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.socials a {
+  margin: 0 6px;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 18px;          /* 🔥 THIS fixes closeness */
+  margin-top: 10px;
+}
+
+.social-icons a {
+  font-size: 22px;
+  color: var(--text);
+  transition: transform 0.15s, color 0.15s;
+}
+
+.social-icons a:hover {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+.hero-img {
+  width: 100%;
+  max-width: 280px;
+  margin: 14px auto 18px;
+  display: block;
+  border-radius: 10px;
+  opacity: 0.95;
+}
+
+
+</style>
+</head>
+
+<body class="dark"><!-- DEFAULT DARK -->
+
+<!-- START SCREEN -->
+<div class="quiz center" id="start">
+  <div class="topbar">
+    <strong>Guess the Flag 🌍</strong>
+    <button onclick="toggleTheme()">🌓</button>
+  </div>
+
+  <p>Test your knowledge of world flags</p>
+  <img class="hero-img"
+     src="flags-hero.jpg"
+     alt="World flags">
+
+
+
+  <div class="start-actions">
+    <button onclick="startGame()">▶ Play Now</button>
+  </div>
+
+  <!-- ABOUT DEVELOPER (INLINE) -->
+  <div class="dev">
+  <p><strong>Made by Abul Irfan Karim with ❤</strong></p>
+
+  <div class="social-icons">
+    <a href="https://www.linkedin.com/in/abul-irfan-karim-095a73315?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+       target="_blank" rel="noopener">
+      <i class="fab fa-linkedin"></i>
+    </a>
+
+    <a href="https://github.com/aikarim"
+       target="_blank" rel="noopener">
+      <i class="fab fa-github"></i>
+    </a>
+
+    <a href="https://x.com/irf4n_07?t=5-6OqK2t8ul2UleF2O_U0A&s=09"
+       target="_blank" rel="noopener">
+      <i class="fab fa-x-twitter"></i>
+    </a>
+  </div>
+</div>
+</div>
+
+
+<div class="quiz hidden" id="game">
+  <div class="topbar">
+    <strong>Score: <span id="score">0</span>/25</strong>
+    <button onclick="toggleTheme()">🌓</button>
+  </div>
+
+  <img id="flag" alt="Flag">
+
+  <div class="options">
+    <button class="opt"></button>
+    <button class="opt"></button>
+    <button class="opt"></button>
+    <button class="opt"></button>
+  </div>
+
+  <p id="msg" class="center"></p>
+
+  <div class="controls">
+    <button onclick="next()">Next</button>
+    <button onclick="endGame()">Quit</button>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div class="quiz hidden center" id="end">
+  <h2>Game Over 🎯</h2>
+  <h1 id="final"></h1>
+  <button onclick="location.reload()">Play Again</button>
+</div>
+
+<script>
+// ===== COUNTRY LIST (UNCHANGED) =====
+const countries = [
+{n:"Afghanistan",c:"af"}, {n:"Åland Islands",c:"ax"}, {n:"Albania",c:"al"}, {n:"Algeria",c:"dz"}, {n:"American Samoa",c:"as"}, {n:"Andorra",c:"ad"}, {n:"Angola",c:"ao"}, {n:"Anguilla",c:"ai"}, {n:"Antarctica",c:"aq"}, {n:"Antigua and Barbuda",c:"ag"}, {n:"Argentina",c:"ar"}, {n:"Armenia",c:"am"}, {n:"Aruba",c:"aw"}, {n:"Australia",c:"au"}, {n:"Austria",c:"at"}, {n:"Azerbaijan",c:"az"}, {n:"Bahamas",c:"bs"}, {n:"Bahrain",c:"bh"}, {n:"Bangladesh",c:"bd"}, {n:"Barbados",c:"bb"}, {n:"Belarus",c:"by"}, {n:"Belgium",c:"be"}, {n:"Belize",c:"bz"}, {n:"Benin",c:"bj"}, {n:"Bermuda",c:"bm"}, {n:"Bhutan",c:"bt"}, {n:"Bolivia",c:"bo"}, {n:"Bosnia and Herzegovina",c:"ba"}, {n:"Botswana",c:"bw"}, {n:"Bouvet Island",c:"bv"}, {n:"Brazil",c:"br"}, {n:"British Indian Ocean Territory",c:"io"}, {n:"Brunei Darussalam",c:"bn"}, {n:"Bulgaria",c:"bg"}, {n:"Burkina Faso",c:"bf"}, {n:"Burundi",c:"bi"}, {n:"Cabo Verde",c:"cv"}, {n:"Cambodia",c:"kh"}, {n:"Cameroon",c:"cm"}, {n:"Canada",c:"ca"}, {n:"Cayman Islands",c:"ky"}, {n:"Central African Republic",c:"cf"}, {n:"Chad",c:"td"}, {n:"Chile",c:"cl"}, {n:"China",c:"cn"}, {n:"Christmas Island",c:"cx"}, {n:"Cocos (Keeling) Islands",c:"cc"}, {n:"Colombia",c:"co"}, {n:"Comoros",c:"km"}, {n:"Congo (Brazzaville)",c:"cg"}, {n:"Congo (Kinshasa)",c:"cd"}, {n:"Cook Islands",c:"ck"}, {n:"Costa Rica",c:"cr"}, {n:"Côte d’Ivoire",c:"ci"}, {n:"Croatia",c:"hr"}, {n:"Cuba",c:"cu"}, {n:"Curaçao",c:"cw"}, {n:"Cyprus",c:"cy"}, {n:"Czechia",c:"cz"}, {n:"Denmark",c:"dk"}, {n:"Djibouti",c:"dj"}, {n:"Dominica",c:"dm"}, {n:"Dominican Republic",c:"do"}, {n:"Ecuador",c:"ec"}, {n:"Egypt",c:"eg"}, {n:"El Salvador",c:"sv"}, {n:"Equatorial Guinea",c:"gq"}, {n:"Eritrea",c:"er"}, {n:"Estonia",c:"ee"}, {n:"Eswatini",c:"sz"}, {n:"Ethiopia",c:"et"}, {n:"Falkland Islands (Malvinas)",c:"fk"}, {n:"Faroe Islands",c:"fo"}, {n:"Fiji",c:"fj"}, {n:"Finland",c:"fi"}, {n:"France",c:"fr"}, {n:"French Guiana",c:"gf"}, {n:"French Polynesia",c:"pf"}, {n:"French Southern Territories",c:"tf"}, {n:"Gabon",c:"ga"}, {n:"Gambia",c:"gm"}, {n:"Georgia",c:"ge"}, {n:"Germany",c:"de"}, {n:"Ghana",c:"gh"}, {n:"Gibraltar",c:"gi"}, {n:"Greece",c:"gr"}, {n:"Greenland",c:"gl"}, {n:"Grenada",c:"gd"}, {n:"Guadeloupe",c:"gp"}, {n:"Guam",c:"gu"}, {n:"Guatemala",c:"gt"}, {n:"Guernsey",c:"gg"}, {n:"Guinea",c:"gn"}, {n:"Guinea-Bissau",c:"gw"}, {n:"Guyana",c:"gy"}, {n:"Haiti",c:"ht"}, {n:"Heard Island and McDonald Islands",c:"hm"}, {n:"Holy See",c:"va"}, {n:"Honduras",c:"hn"}, {n:"Hong Kong",c:"hk"}, {n:"Hungary",c:"hu"}, {n:"Iceland",c:"is"}, {n:"India",c:"in"}, {n:"Indonesia",c:"id"}, {n:"Iran",c:"ir"}, {n:"Iraq",c:"iq"}, {n:"Ireland",c:"ie"}, {n:"Isle of Man",c:"im"}, {n:"Israel",c:"il"}, {n:"Italy",c:"it"}, {n:"Jamaica",c:"jm"}, {n:"Japan",c:"jp"}, {n:"Jersey",c:"je"}, {n:"Jordan",c:"jo"}, {n:"Kazakhstan",c:"kz"}, {n:"Kenya",c:"ke"}, {n:"Kiribati",c:"ki"}, {n:"Korea (North)",c:"kp"}, {n:"Korea (South)",c:"kr"}, {n:"Kuwait",c:"kw"}, {n:"Kyrgyzstan",c:"kg"}, {n:"Lao People’s Democratic Republic",c:"la"}, {n:"Latvia",c:"lv"}, {n:"Lebanon",c:"lb"}, {n:"Lesotho",c:"ls"}, {n:"Liberia",c:"lr"}, {n:"Libya",c:"ly"}, {n:"Liechtenstein",c:"li"}, {n:"Lithuania",c:"lt"}, {n:"Luxembourg",c:"lu"}, {n:"Macao",c:"mo"}, {n:"Madagascar",c:"mg"}, {n:"Malawi",c:"mw"}, {n:"Malaysia",c:"my"}, {n:"Maldives",c:"mv"}, {n:"Mali",c:"ml"}, {n:"Malta",c:"mt"}, {n:"Marshall Islands",c:"mh"}, {n:"Martinique",c:"mq"}, {n:"Mauritania",c:"mr"}, {n:"Mauritius",c:"mu"}, {n:"Mayotte",c:"yt"}, {n:"Mexico",c:"mx"}, {n:"Micronesia (Federated States of)",c:"fm"}, {n:"Moldova",c:"md"}, {n:"Monaco",c:"mc"}, {n:"Mongolia",c:"mn"}, {n:"Montenegro",c:"me"}, {n:"Montserrat",c:"ms"}, {n:"Morocco",c:"ma"}, {n:"Mozambique",c:"mz"}, {n:"Myanmar",c:"mm"}, {n:"Namibia",c:"na"}, {n:"Nauru",c:"nr"}, {n:"Nepal",c:"np"}, {n:"Netherlands",c:"nl"}, {n:"New Caledonia",c:"nc"}, {n:"New Zealand",c:"nz"}, {n:"Nicaragua",c:"ni"}, {n:"Niger",c:"ne"}, {n:"Nigeria",c:"ng"}, {n:"Niue",c:"nu"}, {n:"Norfolk Island",c:"nf"}, {n:"North Macedonia",c:"mk"}, {n:"Northern Mariana Islands",c:"mp"}, {n:"Norway",c:"no"}, {n:"Oman",c:"om"}, {n:"Pakistan",c:"pk"}, {n:"Palau",c:"pw"}, {n:"Panama",c:"pa"}, {n:"Papua New Guinea",c:"pg"}, {n:"Paraguay",c:"py"}, {n:"Peru",c:"pe"}, {n:"Philippines",c:"ph"}, {n:"Pitcairn",c:"pn"}, {n:"Poland",c:"pl"}, {n:"Portugal",c:"pt"}, {n:"Puerto Rico",c:"pr"}, {n:"Qatar",c:"qa"}, {n:"Réunion",c:"re"}, {n:"Romania",c:"ro"}, {n:"Russian Federation",c:"ru"}, {n:"Rwanda",c:"rw"}, {n:"Saint Barthélemy",c:"bl"}, {n:"Saint Helena",c:"sh"}, {n:"Saint Kitts and Nevis",c:"kn"}, {n:"Saint Lucia",c:"lc"}, {n:"Saint Martin",c:"mf"}, {n:"Saint Pierre and Miquelon",c:"pm"}, {n:"Saint Vincent and the Grenadines",c:"vc"}, {n:"Samoa",c:"ws"}, {n:"San Marino",c:"sm"}, {n:"Sao Tome and Principe",c:"st"}, {n:"Saudi Arabia",c:"sa"}, {n:"Senegal",c:"sn"}, {n:"Serbia",c:"rs"}, {n:"Seychelles",c:"sc"}, {n:"Sierra Leone",c:"sl"}, {n:"Singapore",c:"sg"}, {n:"Sint Maarten",c:"sx"}, {n:"Slovakia",c:"sk"}, {n:"Slovenia",c:"si"}, {n:"Solomon Islands",c:"sb"}, {n:"Somalia",c:"so"}, {n:"South Africa",c:"za"}, {n:"South Georgia & South Sandwich Islands",c:"gs"}, {n:"South Sudan",c:"ss"}, {n:"Spain",c:"es"}, {n:"Sri Lanka",c:"lk"}, {n:"Sudan",c:"sd"}, {n:"Suriname",c:"sr"}, {n:"Svalbard and Jan Mayen",c:"sj"}, {n:"Sweden",c:"se"}, {n:"Switzerland",c:"ch"}, {n:"Syrian Arab Republic",c:"sy"}, {n:"Taiwan (Province of China)",c:"tw"}, {n:"Tajikistan",c:"tj"}, {n:"Tanzania",c:"tz"}, {n:"Thailand",c:"th"}, {n:"Timor-Leste",c:"tl"}, {n:"Togo",c:"tg"}, {n:"Tonga",c:"to"}, {n:"Trinidad and Tobago",c:"tt"}, {n:"Tunisia",c:"tn"}, {n:"Türkiye",c:"tr"}, {n:"Turkmenistan",c:"tm"}, {n:"Turks and Caicos Islands",c:"tc"}, {n:"Tuvalu",c:"tv"}, {n:"Uganda",c:"ug"}, {n:"Ukraine",c:"ua"}, {n:"United Arab Emirates",c:"ae"}, {n:"United Kingdom",c:"gb"}, {n:"United States",c:"us"}, {n:"United States Minor Outlying Islands",c:"um"}, {n:"Uruguay",c:"uy"}, {n:"Uzbekistan",c:"uz"}, {n:"Vanuatu",c:"vu"}, {n:"Venezuela",c:"ve"}, {n:"Vietnam",c:"vn"}, {n:"Virgin Islands (U.S.)",c:"vi"}, {n:"Wallis and Futuna",c:"wf"}, {n:"Western Sahara",c:"eh"}, {n:"Yemen",c:"ye"}, {n:"Zambia",c:"zm"}, {n:"Zimbabwe",c:"zw"}
+];
+
+// ===== GAME LOGIC =====
+let score = 0;
+let count = 0;
+let pool = [...countries].sort(()=>0.5-Math.random()).slice(0,25);
+let correct = "";
+
+const flag = document.getElementById("flag");
+const opts = document.querySelectorAll(".opt");
+const msg = document.getElementById("msg");
+const scoreEl = document.getElementById("score");
+
+function preload(code){
+  const img = new Image();
+  img.src = `https://flagcdn.com/w80/${code}.png`;
+}
+
+function load() {
+  msg.textContent = "";
+  const q = pool[count];
+  correct = q.n;
+
+  flag.src = `https://flagcdn.com/w80/${q.c}.png`;
+  if (pool[count+1]) preload(pool[count+1].c);
+
+  const wrong = countries.filter(x=>x.n!==correct)
+    .sort(()=>0.5-Math.random()).slice(0,3);
+
+  const all = [...wrong, q].sort(()=>0.5-Math.random());
+
+  opts.forEach((b,i)=>{
+    b.textContent = all[i].n;
+    b.onclick = ()=>check(b.textContent);
+  });
+}
+
+function check(ans) {
+  if(ans===correct){
+    score++;
+    scoreEl.textContent = score;
+    msg.textContent = "✅ Correct";
+  } else {
+    msg.textContent = `❌ ${correct}`;
+  }
+}
+
+function next() {
+  count++;
+  if(count===25) endGame();
+  else load();
+}
+
+function endGame() {
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("end").classList.remove("hidden");
+  document.getElementById("final").textContent = `Score: ${score}/25`;
+}
+
+function toggleTheme(){
+  document.body.classList.toggle("dark");
+}
+
+function startGame(){
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+  load();
+}
+</script>
+
+</body>
+</html>
