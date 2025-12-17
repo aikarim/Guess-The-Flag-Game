@@ -194,6 +194,7 @@ const msg = document.getElementById("msg");
 const scoreEl = document.getElementById("score");
 
 function load(){
+  msg.textContent = "";
   const q = pool[count];
   correct = q.n;
   flag.src = `https://flagcdn.com/w160/${q.c}.png`;
