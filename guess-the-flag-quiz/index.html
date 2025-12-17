@@ -34,11 +34,12 @@ body {
   min-height: 100vh;
 }
 
+/* CARD */
 .quiz {
   background: var(--card);
   padding: 22px;
   border-radius: 16px;
-  width: 360px;
+  width: 360px;              /* desktop size */
   margin-top: 30px;
   box-shadow: 0 18px 35px rgba(0,0,0,.35);
 }
@@ -59,7 +60,7 @@ img {
   margin: 16px auto;
   display: block;
   border-radius: 10px;
-  border: 3px solid #000; /* BLACK BORDER */
+  border: 3px solid #000;
 }
 
 /* ---------- OPTIONS ---------- */
@@ -73,7 +74,7 @@ button {
   padding: 10px;
   border: none;
   background: var(--btn);
-  color: var(--text); /* FIXED DARK MODE TEXT */
+  color: var(--text);
   cursor: pointer;
   border-radius: 8px;
   font-weight: 600;
@@ -102,16 +103,11 @@ button:hover {
   font-size: 14px;
 }
 
-.socials a {
-  margin: 0 6px;
-  font-size: 20px;
-  text-decoration: none;
-}
-
+/* ---------- SOCIALS ---------- */
 .social-icons {
   display: flex;
   justify-content: center;
-  gap: 18px;          /* 🔥 THIS fixes closeness */
+  gap: 18px;
   margin-top: 10px;
 }
 
@@ -126,6 +122,7 @@ button:hover {
   transform: scale(1.1);
 }
 
+/* ---------- HERO IMAGE ---------- */
 .hero-img {
   width: 100%;
   max-width: 280px;
@@ -134,6 +131,82 @@ button:hover {
   border-radius: 10px;
   opacity: 0.95;
 }
+
+/* ================================================= */
+/* =============== MOBILE RESPONSIVE =============== */
+/* ================================================= */
+@media (max-width: 600px) {
+
+  body {
+    justify-content: flex-start;
+  }
+
+  .quiz {
+    width: 100%;
+    min-height: 100vh;
+    margin-top: 0;
+    border-radius: 0;
+    padding: 24px 18px;
+  }
+
+  .topbar strong {
+    font-size: 18px;
+  }
+
+  .topbar button {
+    font-size: 18px;
+    padding: 8px 12px;
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  /* BIGGER HERO IMAGE */
+  .hero-img {
+    max-width: 100%;
+    margin: 18px auto 22px;
+  }
+
+  /* BIGGER FLAG */
+  img#flag {
+    width: 240px;
+    max-width: 90%;
+  }
+
+  /* OPTIONS */
+  .options {
+    gap: 14px;
+  }
+
+  .options button {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  /* ACTION BUTTONS */
+  .start-actions button,
+  .controls button {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  #msg {
+    font-size: 16px;
+    margin-top: 8px;
+  }
+
+  .dev {
+    margin-top: 28px;
+    font-size: 15px;
+  }
+
+  .social-icons a {
+    font-size: 26px;
+  }
+}
+</style>
+
 
 
 </style>
